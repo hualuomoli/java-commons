@@ -154,21 +154,24 @@ public class TemplateUtils {
 			logger.error("find error {}", e);
 			return null;
 		} finally {
-			if (temp != null) {
-				try {
-					FileUtils.forceDelete(temp);
-				} catch (IOException e) {
-				}
-			}
+			// 关闭输入流
 			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
 				}
 			}
+			// 关闭输出流
 			if (os != null) {
 				try {
 					os.close();
+				} catch (IOException e) {
+				}
+			}
+			// 删除文件
+			if (temp != null) {
+				try {
+					FileUtils.forceDelete(temp);
 				} catch (IOException e) {
 				}
 			}
