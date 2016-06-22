@@ -4,10 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,11 +139,15 @@ public class TemplateUtils {
 	 */
 	public static Template getResourceTemplate(String templateResourcePath, String templateName, String templateEncoding) {
 		File temp = null;
+		InputStream is = null;
+		OutputStream os = null;
 		try {
 			String id = RandomUtils.getId();
 			String projectPath = ProjectUtils.getLocation();
 			temp = new File(projectPath, id);
-			FileUtils.copyFile(new File(templateResourcePath, templateName), temp);
+			is = TemplateUtils.class.getClassLoader().getResourceAsStream(templateResourcePath + "/" + templateName);
+			os = new FileOutputStream(temp);
+			IOUtils.copy(is, os);
 			return getTemplate(projectPath, id, templateEncoding);
 		} catch (IOException e) {
 			// 不可能存在
@@ -150,6 +157,18 @@ public class TemplateUtils {
 			if (temp != null) {
 				try {
 					FileUtils.forceDelete(temp);
+				} catch (IOException e) {
+				}
+			}
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+			if (os != null) {
+				try {
+					os.close();
 				} catch (IOException e) {
 				}
 			}
