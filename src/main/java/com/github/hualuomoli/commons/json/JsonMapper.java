@@ -1,5 +1,7 @@
 package com.github.hualuomoli.commons.json;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JavaType;
 
 /**
@@ -39,6 +41,17 @@ public class JsonMapper extends BaseJsonMapper {
 	@SuppressWarnings("unchecked")
 	public static <T> T fromJsonString(String jsonString, Class<?> clazz) {
 		return (T) getInstance().fromJson(jsonString, clazz);
+	}
+
+	/**
+	 * 反序列化
+	 * @param jsonString data
+	 * @param clazz object的class
+	 * @return object instance
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T fromJsonListString(String jsonString, Class<?> clazz) {
+		return (T) getInstance().fromJson(jsonString, getJavaType(List.class, clazz));
 	}
 
 	/**

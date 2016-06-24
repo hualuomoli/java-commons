@@ -20,12 +20,11 @@ public class SerializeUtils {
 	private SerializeUtils() {
 	}
 
-	//
+	// 序列化
 	public static byte[] serialize(Object object) {
 		ObjectOutputStream oos = null;
 		ByteArrayOutputStream baos = null;
 		try {
-			// 序列化
 			baos = new ByteArrayOutputStream();
 			oos = new ObjectOutputStream(baos);
 			oos.writeObject(object);
@@ -37,6 +36,7 @@ public class SerializeUtils {
 		return null;
 	}
 
+	// 反序列化
 	@SuppressWarnings("unchecked")
 	public static <T> T unserialize(byte[] bytes) {
 		if (bytes == null)
@@ -51,6 +51,11 @@ public class SerializeUtils {
 			logger.warn("serialize object error. {}", e);
 		}
 		return null;
+	}
+
+	// 克隆
+	public static <T> T clone(T t) {
+		return unserialize(serialize(t));
 	}
 
 }
